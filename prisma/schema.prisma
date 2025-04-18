@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  name      String
+  email     String   @unique
+  password  String
+  role      Role     @default(USER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  rentals   Rental[] // Add relation to Rental model
+
+  @@map("users")
+}
+model CarCategory {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String   @unique
+  description String?
+  cars        Car[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum CarStatus {
+  AVAILABLE
+  UNAVAILABLE
+}
+
+model Car {
+  id                String @id @default(uuid()) @db.Uuid
+  userId            String @map("user_id") @db.Uuid
+  licensePlate      String @map("license_plate")
+  title             String
+  chassis           String
+  renavam           String
+  model             String
+  brand             String
+  year              String
+  avaliable         Boolean  @default(true)  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  status           CarStatus @default(AVAILABLE)
+  categoryId        String @map("category_id") @db.Uuid
+  category          CarCategory @relation(fields: [categoryId], references: [id])
+  rentals           Rental[]
+
+  @@map("cars")
+}
+
+enum RentalStatus {
+  PENDING
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model Rental {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @map("user_id") @db.Uuid
+  user       User     @relation(fields: [userId], references: [id])
+  carId      String   @map("car_id") @db.Uuid
+  car        Car      @relation(fields: [carId], references: [id])
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Float
+  status     RentalStatus @default(PENDING) // pending, active, completed, cancelled
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+
+  @@map("rentals")
+}
