@@ -7,11 +7,15 @@ class Env {
   jwtSecret: string;
 }
 export const env: Env = plainToInstance(Env, {
-  jwtSecret: process.env.JWT_SECRET,
+  jwtSecret: "string"
 });
 
 const errors = validateSync(env);
 
 if (errors.length > 0) {
-  throw new Error(JSON.stringify(errors, null, 2));
+  const messages = errors.map(err => {
+    const constraints = Object.values(err.constraints || {});
+    return `${err.property}: ${constraints.join(', ')}`;
+  }).join('\n');
+  throw new Error(`Erro nas variáveis de ambiente:\n${messages}`);
 }

@@ -1,7 +1,9 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { RentalsService } from './rentals.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { CreateRentalDto } from './dto/create-rental.dto';
+import { UpdateRentalStatusDto } from './dto/update-rental-status.dto';
 import { UpdateRentalDto } from './dto/update-rental.dto';
+import { RentalsService } from './rentals.service';
+
 
 @Controller('rentals')
 export class RentalsController {
@@ -9,6 +11,8 @@ export class RentalsController {
 
   @Post()
   create(@Body() createRentalDto: CreateRentalDto) {
+    console.log(`createRentalDto: ${JSON.stringify(createRentalDto)}`);
+    
     return this.rentalsService.create(createRentalDto);
   }
 
@@ -23,12 +27,17 @@ export class RentalsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRentalDto: UpdateRentalDto) {
-    return this.rentalsService.update(+id, updateRentalDto);
+  updateRental(@Param('id') id: string, @Body() dto: UpdateRentalDto) {
+    return this.rentalsService.update(id, dto);
+  }
+
+  @Patch(':id/status')
+  updateStatus(@Param('id') id: string, @Body() dto: UpdateRentalStatusDto) {
+    return this.rentalsService.updateStatus(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.rentalsService.remove(+id);
+  delete(@Param('id') id: string) {
+    return this.rentalsService.remove(id);
   }
 }

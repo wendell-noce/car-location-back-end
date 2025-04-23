@@ -7,6 +7,10 @@ export class CreateCarDto {
 
   @IsString()
   @IsNotEmpty()
+  imageUrl: string;
+
+  @IsString()
+  @IsNotEmpty()
   chassis: string;
 
   @IsString()
@@ -23,15 +27,7 @@ export class CreateCarDto {
 
   @IsString()
   @IsNotEmpty()
-  title: string;
-
-  @IsString()
-  @IsNotEmpty()
   year: string;
-
-  @IsString()
-  @IsNotEmpty()
-  description: string;
 
   @IsNumber()
   @IsNotEmpty()
@@ -40,8 +36,4 @@ export class CreateCarDto {
   @IsUUID()
   @IsOptional()
   categoryId?: string;
-
-  @IsUUID()
-  @IsOptional()
-  userId?: string; 
 }

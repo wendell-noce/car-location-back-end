@@ -38,7 +38,10 @@ export class AuthService {
 
     const data = {
       accessToken,
-      userRole: user.role,
+      user: {
+        name: user.name,
+        role: user.role,
+      },
     };
 
     return { data };
@@ -71,7 +74,7 @@ export class AuthService {
 
     const data = {
       accessToken,
-      userRole: user.role,
+      user: user,
     };
 
     return { data };

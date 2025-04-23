@@ -30,31 +30,32 @@ model User {
 model CarCategory {
   id          String   @id @default(uuid()) @db.Uuid
   name        String   @unique
-  description String?
+  description String
   cars        Car[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  @@map("car_categories")
 }
 
 enum CarStatus {
-  AVAILABLE
+  AVALIABLE
   UNAVAILABLE
 }
 
 model Car {
   id                String @id @default(uuid()) @db.Uuid
-  userId            String @map("user_id") @db.Uuid
-  licensePlate      String @map("license_plate")
-  title             String
+  imageUrl          String @map("image_url")
+  licensePlate      String @map("license_plate")  
   chassis           String
   renavam           String
   model             String
   brand             String
   year              String
-  avaliable         Boolean  @default(true)  
+  dailyRate         Float   @map("daily_rate")
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  status           CarStatus @default(AVAILABLE)
+  status            CarStatus @default(AVALIABLE)
   categoryId        String @map("category_id") @db.Uuid
   category          CarCategory @relation(fields: [categoryId], references: [id])
   rentals           Rental[]
@@ -71,7 +72,7 @@ enum RentalStatus {
 
 model Rental {
   id         String   @id @default(uuid()) @db.Uuid
-  userId     String   @map("user_id") @db.Uuid
+  userId     String   @db.Uuid @map("user_id")
   user       User     @relation(fields: [userId], references: [id])
   carId      String   @map("car_id") @db.Uuid
   car        Car      @relation(fields: [carId], references: [id])
