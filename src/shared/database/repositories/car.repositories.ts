@@ -58,7 +58,15 @@ export class CarRepository {
   findMany<T extends Prisma.CarFindManyArgs>(
     findManyDto: Prisma.SelectSubset<T, Prisma.CarFindManyArgs>,
   ) {
-    return this.prismaService.car.findMany(findManyDto);
+    return this.prismaService.car.findMany({
+      include: {
+        category: {
+          select: {            
+            name: true,                        
+          },
+        }
+      }
+    });
   }
 
   async update(updateDto: Prisma.CarUpdateArgs) {
